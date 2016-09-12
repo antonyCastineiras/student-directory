@@ -26,10 +26,16 @@ def print(students)
 	letter = search_letter
 	students.each_with_index do |student,index|
 		first_letter = student[:name][0]
+		student_name = ''
+		if student[:name].length >= 12 
+			student_name = student[:name][0..8]+('...') 
+		else 
+			student_name = student[:name]
+		end 
 		if letter.empty?
-			puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
+			puts "#{index+1}. #{student_name} (#{student[:cohort]} cohort)"
 		elsif !letter.empty? and first_letter == letter
-			puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
+			puts "#{index+1}. #{student_name} (#{student[:cohort]} cohort)"
 		end
 	end
 end
