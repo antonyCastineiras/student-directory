@@ -12,14 +12,25 @@ def input_students
 	students
 end
 
+def search_letter
+	puts "would you like to sort by letter? Enter letter or leave blank:"
+	search_letter = gets.chomp
+end
+
 def print_header
 	puts "The students of Villains Academy"
 	puts "-----------------"
 end
 
 def print(students)
-	students.each do |student|
-		puts "#{student[:name]} (#{student[:cohort]} cohort)"
+	letter = search_letter
+	students.each_with_index do |student,index|
+		first_letter = student[:name][0]
+		if letter.empty?
+			puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
+		elsif !letter.empty? and first_letter == letter
+			puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
+		end
 	end
 end
 
