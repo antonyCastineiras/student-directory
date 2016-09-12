@@ -12,7 +12,7 @@ def input_students
 	students
 end
 
-def search_letter
+def search
 	puts "would you like to sort by letter? Enter letter or leave blank:"
 	search_letter = gets.chomp
 end
@@ -23,20 +23,22 @@ def print_header
 end
 
 def print(students)
-	letter = search_letter
-	students.each_with_index do |student,index|
-		first_letter = student[:name][0]
+	search_letter = search
+	i = 0
+	while i < students.length do 
+		first_letter = students[i][:name][0]
 		student_name = ''
-		if student[:name].length >= 12 
-			student_name = student[:name][0..8]+('...') 
+		if students[i][:name].length >= 12 
+			student_name = students[i][:name][0..8]+('...') 
 		else 
-			student_name = student[:name]
+			student_name = students[i][:name]
 		end 
-		if letter.empty?
-			puts "#{index+1}. #{student_name} (#{student[:cohort]} cohort)"
-		elsif !letter.empty? and first_letter == letter
-			puts "#{index+1}. #{student_name} (#{student[:cohort]} cohort)"
+		if search_letter.empty?
+			puts "#{i+1}. #{student_name} (#{students[i][:cohort]} cohort)"
+		elsif !search_letter.empty? and first_letter == search_letter
+			puts "#{i+1}. #{student_name} (#{students[i][:cohort]} cohort)"
 		end
+		i = i + 1
 	end
 end
 
