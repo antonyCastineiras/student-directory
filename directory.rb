@@ -1,10 +1,11 @@
+require 'pry'
+$months = ["january","february","march","april","may","june","july","august","september","october","november","december"]
 def input_chohort
-	months = ["january","february","march","april","may","june","july","august","september","october","november","december"]
 	cohort = ''
-	until months.include?(cohort)
+	until $months.include?(cohort)
 		puts "which cohort?"
-		cohort = gets.chomp
-		if cohort.empty? or !months.include?(cohort)
+		cohort = gets.chomp.downcase
+		if cohort.empty? or !$months.include?(cohort)
 			puts "please enter a valid cohort."
 		end
 	end
@@ -27,10 +28,6 @@ def input_students
 end
 
 
-def search
-	puts "would you like to sort by letter? Enter letter or leave blank:"
-	search_letter = gets.chomp
-end
 
 def get_student_name(student_name)
 		if student_name.length >= 12 
@@ -39,25 +36,57 @@ def get_student_name(student_name)
 		return student_name
 end
 
-def print_header
-	puts "The students of Villains Academy"
-	puts "-----------------"
+def sort_by?(string)
+	puts "would you like to sort by #{string}?"
+	puts "Enter y/n:"
+	input = gets.chomp.downcase
+	while input != "n" or input != "y"
+		if input == "n"
+			return false
+		elsif input == "y"
+			return true
+		end
+		puts "Enter y/n:"
+		input = gets.chomp
+	end
+end
+
+def letter_sort(students)
+	puts "which letter?"
+	search_letter = gets.chomp
+	sorted_array = []
+	students.each {|student| if student[:name][0] == search_letter then sorted_array << student end }
+	return sorted_array
+end
+
+def cohort_sort(students)
+	puts "which cohort?"
+	cohort = ''
+	until $months.include?(cohort)
+		cohort = gets.chomp
+	end
+	sorted_array = []
+	students.each {|student| if student[:cohort] == cohort.to_sym then sorted_array << student end } 
+	return sorted_array
 end
 
 def print(students)
-	search_letter = search
+	#search_letter = search
+	if sort_by?("letter") then students = letter_sort(students) end
+	if sort_by?("cohort") then students = cohort_sort(students) end
 	print_header
 	i = 0
 	while i < students.length do 
 		student_name = get_student_name(students[i][:name])
 		first_letter = student_name[0]
-		if search_letter.empty?
-			puts "#{i+1}. #{student_name} (#{students[i][:cohort]} cohort)"
-		elsif !search_letter.empty? and first_letter == search_letter
-			puts "#{i+1}. #{student_name} (#{students[i][:cohort]} cohort)"
-		end
+		puts "#{i+1}. #{student_name} (#{students[i][:cohort]} cohort)"
 		i = i + 1
 	end
+end
+
+def print_header
+	puts "The students of Villains Academy"
+	puts "-----------------"
 end
 
 def print_footer(names)
