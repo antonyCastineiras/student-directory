@@ -1,6 +1,17 @@
 
 $months = ["january","february","march","april","may","june","july","august","september","october","november","december"]
 
+def print_header
+	puts "The students of Villains Academy"
+	puts "--------------------------------"
+end
+
+def print_footer(names)
+	string  = "Overall, we have #{names.count} great student" 
+	if names.length > 1 then string += "'s" end
+	puts string
+end
+
 def input_chohort
 	cohort = ''
 	until $months.include?(cohort)
@@ -13,10 +24,10 @@ def input_chohort
 	return cohort
 end
 
-def input_students
+def input_students(students)
 	puts "Please enter the names of the students"
 	puts "To finish, just hit return twice"
-	students = []
+	students = students
 	name = gets.chomp
 	while !name.empty? do
 		cohort = input_chohort
@@ -82,21 +93,28 @@ def print_students(students)
 	else
 		puts "No students found"
 	end
+
 end
 
-def print_header
-	puts "The students of Villains Academy"
-	puts "--------------------------------"
+def interactive_menu
+	students = []
+	loop do
+		puts "1. Update students"
+		puts "2. Show the students"
+		puts "9.exit"
+		selection = gets.chomp
+		case selection
+			when "1"
+				students = input_students(students)
+			when "2"
+				print_students(students)
+				print_footer(students)
+			when "9"
+				exit
+			else 
+				puts "I don't know what you meant,try again"
+		end
+	end
 end
 
-def print_footer(names)
-	print "Overall, we have #{names.count} great student"
-	if names.length > 1
-		print "'s"+"\n"
-	end	
-end
-
-
-students = input_students
-print_students(students)
-print_footer(students)
+interactive_menu
