@@ -18,7 +18,7 @@ def input_students
 	name = gets.chomp
 	while !name.empty? do
 		cohort = input_chohort
-		students << {name: name, cohort: cohort}
+		students << {name: name, cohort: cohort.to_sym}
 		puts "Now we have #{students.count} students"
 		name = gets.chomp
 	end
@@ -32,6 +32,13 @@ def search
 	search_letter = gets.chomp
 end
 
+def get_student_name(student_name)
+		if student_name.length >= 12 
+			student_name = student_name[0..8]+('...') 
+		end 
+		return student_name
+end
+
 def print_header
 	puts "The students of Villains Academy"
 	puts "-----------------"
@@ -42,13 +49,8 @@ def print(students)
 	print_header
 	i = 0
 	while i < students.length do 
-		first_letter = students[i][:name][0]
-		student_name = ''
-		if students[i][:name].length >= 12 
-			student_name = students[i][:name][0..8]+('...') 
-		else 
-			student_name = students[i][:name]
-		end 
+		student_name = get_student_name(students[i][:name])
+		first_letter = student_name[0]
 		if search_letter.empty?
 			puts "#{i+1}. #{student_name} (#{students[i][:cohort]} cohort)"
 		elsif !search_letter.empty? and first_letter == search_letter
