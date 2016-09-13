@@ -4,13 +4,16 @@ def input_students
 	students = []
 	name = gets.chomp
 	while !name.empty? do
-		students << {name: name, cohort: :november}
+		puts "which cohort?"
+		cohort = gets.chomp
+		students << {name: name, cohort: cohort}
 		puts "Now we have #{students.count} students"
 		name = gets.chomp
 	end
 
 	students
 end
+
 
 def search
 	puts "would you like to sort by letter? Enter letter or leave blank:"
@@ -24,6 +27,7 @@ end
 
 def print(students)
 	search_letter = search
+	print_header
 	i = 0
 	while i < students.length do 
 		first_letter = students[i][:name][0]
@@ -48,6 +52,5 @@ end
 
 
 students = input_students
-print_header
 print(students)
 print_footer(students)
