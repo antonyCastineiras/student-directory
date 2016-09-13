@@ -72,11 +72,15 @@ def print_students(students)
 	if sort_by?("letter") then students = letter_sort(students) end
 	if sort_by?("cohort") then students = cohort_sort(students) end
 	print_header
-	i = 0
-	while i < students.length do 
-		student_name = get_student_name(students[i][:name])
-		puts "#{i+1}. #{student_name} (#{students[i][:cohort]} cohort)"
-		i = i + 1
+	if students.length > 0
+		i = 0
+		while i < students.length do 
+			student_name = get_student_name(students[i][:name])
+			puts "#{i+1}. #{student_name} (#{students[i][:cohort]} cohort)"
+			i = i + 1
+		end
+	else
+		puts "No students found"
 	end
 end
 
