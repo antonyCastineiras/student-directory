@@ -1,5 +1,6 @@
-require 'pry'
+
 $months = ["january","february","march","april","may","june","july","august","september","october","november","december"]
+
 def input_chohort
 	cohort = ''
 	until $months.include?(cohort)
@@ -27,8 +28,6 @@ def input_students
 	students
 end
 
-
-
 def get_student_name(student_name)
 		if student_name.length >= 12 
 			student_name = student_name[0..8]+('...') 
@@ -38,16 +37,15 @@ end
 
 def sort_by?(string)
 	puts "would you like to sort by #{string}?"
+	input = ''
+	while input != "n" or input != "y"
 	puts "Enter y/n:"
 	input = gets.chomp.downcase
-	while input != "n" or input != "y"
 		if input == "n"
 			return false
 		elsif input == "y"
 			return true
-		end
-		puts "Enter y/n:"
-		input = gets.chomp
+		end		
 	end
 end
 
@@ -70,15 +68,13 @@ def cohort_sort(students)
 	return sorted_array
 end
 
-def print(students)
-	#search_letter = search
+def print_students(students)
 	if sort_by?("letter") then students = letter_sort(students) end
 	if sort_by?("cohort") then students = cohort_sort(students) end
 	print_header
 	i = 0
 	while i < students.length do 
 		student_name = get_student_name(students[i][:name])
-		first_letter = student_name[0]
 		puts "#{i+1}. #{student_name} (#{students[i][:cohort]} cohort)"
 		i = i + 1
 	end
@@ -86,14 +82,17 @@ end
 
 def print_header
 	puts "The students of Villains Academy"
-	puts "-----------------"
+	puts "--------------------------------"
 end
 
 def print_footer(names)
-	puts "Overall, we have #{names.count} great students"	
+	print "Overall, we have #{names.count} great student"
+	if names.length > 1
+		print "'s"+"\n"
+	end	
 end
 
 
 students = input_students
-print(students)
+print_students(students)
 print_footer(students)
