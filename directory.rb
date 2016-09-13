@@ -1,11 +1,23 @@
+def input_chohort
+	months = ["january","february","march","april","may","june","july","august","september","october","november","december"]
+	cohort = ''
+	until months.include?(cohort)
+		puts "which cohort?"
+		cohort = gets.chomp
+		if cohort.empty? or !months.include?(cohort)
+			puts "please enter a valid cohort."
+		end
+	end
+	return cohort
+end
+
 def input_students
 	puts "Please enter the names of the students"
 	puts "To finish, just hit return twice"
 	students = []
 	name = gets.chomp
 	while !name.empty? do
-		puts "which cohort?"
-		cohort = gets.chomp
+		cohort = input_chohort
 		students << {name: name, cohort: cohort}
 		puts "Now we have #{students.count} students"
 		name = gets.chomp
