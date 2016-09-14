@@ -61,9 +61,7 @@ end
 def letter_sort
 	puts "which letter?"
 	search_letter = gets.chomp
-	sorted_array = []
-	@students.each {|student| if student[:name][0] == search_letter then sorted_array << student end }
-	return sorted_array
+	@students.select! {|student| student[:name][0] == search_letter }
 end
 
 def cohort_sort
