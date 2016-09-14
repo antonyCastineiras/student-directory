@@ -1,5 +1,6 @@
 
-$months = ["january","february","march","april","may","june","july","august","september","october","november","december"]
+@months = ["january","february","march","april","may","june","july","august","september","october","november","december"]
+@students = []
 
 def print_header
 	puts "The students of Villains Academy"
@@ -14,31 +15,28 @@ end
 
 def input_chohort
 	cohort = ''
-	until $months.include?(cohort)
+	until @months.include?(cohort)
 		puts "which cohort?"
 		cohort = gets.chomp.downcase
-		if cohort.empty? or !$months.include?(cohort)
+		if cohort.empty? or !@months.include?(cohort)
 			puts "please enter a valid cohort."
 		end
 	end
 	return cohort
 end
 
-def input_students(students)
+def input_students
 	puts "Please enter the names of the students"
 	puts "To finish, just hit return twice"
-	students = students
 	name = gets.chomp
 	while !name.empty? do
 		cohort = input_chohort
-		students << {name: name, cohort: cohort.to_sym}
-		puts "Now we have #{students.count} students"
+		@students << {name: name, cohort: cohort.to_sym}
+		puts "Now we have #{@students.count} students"
 		name = gets.chomp
 	end
-
-	students
 end
-
+	
 def get_student_name(student_name)
 		if student_name.length >= 12 
 			student_name = student_name[0..8]+('...') 
@@ -60,34 +58,34 @@ def sort_by?(string)
 	end
 end
 
-def letter_sort(students)
+def letter_sort
 	puts "which letter?"
 	search_letter = gets.chomp
 	sorted_array = []
-	students.each {|student| if student[:name][0] == search_letter then sorted_array << student end }
+	@students.each {|student| if student[:name][0] == search_letter then sorted_array << student end }
 	return sorted_array
 end
 
-def cohort_sort(students)
+def cohort_sort
 	puts "which cohort?"
 	cohort = ''
-	until $months.include?(cohort)
+	until @months.include?(cohort)
 		cohort = gets.chomp
 	end
 	sorted_array = []
-	students.each {|student| if student[:cohort] == cohort.to_sym then sorted_array << student end } 
+	@students.each {|student| if student[:cohort] == cohort.to_sym then sorted_array << student end } 
 	return sorted_array
 end
 
-def print_students(students)
-	if sort_by?("letter") then students = letter_sort(students) end
-	if sort_by?("cohort") then students = cohort_sort(students) end
+def print_students
+	if sort_by?("letter") then @students = letter_sort end
+	if sort_by?("cohort") then @students = cohort_sort end
 	print_header
-	if students.length > 0
+	if @students.length > 0
 		i = 0
-		while i < students.length do 
-			student_name = get_student_name(students[i][:name])
-			puts "#{i+1}. #{student_name} (#{students[i][:cohort]} cohort)"
+		while i < @students.length do 
+			student_name = get_student_name(@students[i][:name])
+			puts "#{i+1}. #{student_name} (#{@students[i][:cohort]} cohort)"
 			i = i + 1
 		end
 	else
@@ -97,7 +95,6 @@ def print_students(students)
 end
 
 def interactive_menu
-	students = []
 	loop do
 		puts "1. Update students"
 		puts "2. Show the students"
@@ -105,10 +102,10 @@ def interactive_menu
 		selection = gets.chomp
 		case selection
 			when "1"
-				students = input_students(students)
+				input_students
 			when "2"
-				print_students(students)
-				print_footer(students)
+				print_students
+				print_footer(@students)
 			when "9"
 				exit
 			else 
