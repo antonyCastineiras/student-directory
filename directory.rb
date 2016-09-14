@@ -16,7 +16,7 @@ def input_chohort
 	cohort = ''
 	until @months.include?(cohort)
 		puts "which cohort?"
-		cohort = gets.chomp.downcase
+		cohort = STDIN.gets.chomp.downcase
 		if cohort.empty? or !@months.include?(cohort)
 			puts "please enter a valid cohort."
 		end
@@ -27,18 +27,22 @@ end
 def input_students
 	puts "Please enter the names of the students"
 	puts "To finish, just hit return twice"
-	name = gets.chomp
+	name = STDIN.gets.chomp
 	while !name.empty? do
 		cohort = input_chohort
-		@students << {name: name, cohort: cohort.to_sym}
-		@full_list_of_students << {name: name, cohort: cohort.to_sym}
+		update_students(name,cohort)
 		puts "Now we have #{@students.count} students"
-		name = gets.chomp
+		name = STDIN.gets.chomp
 	end
 end
 
+def update_students(name,cohort)
+		@students << {name: name, cohort: cohort.to_sym}
+		@full_list_of_students << {name: name, cohort: cohort.to_sym}
+end
+
 def reset_student_list
-	@students = @full_list_of_students
+	@full_list_of_students
 end
 	
 def get_student_name(student_name)
@@ -51,7 +55,7 @@ def sort_by?(string)
 	input = ''
 	while input != "n" or input != "y"
 	puts "Enter y/n:"
-	input = gets.chomp.downcase
+	input = STDIN.gets.chomp.downcase
 		if input == "n"
 			return false
 		elsif input == "y"
@@ -62,7 +66,7 @@ end
 
 def letter_sort
 	puts "which letter?"
-	search_letter = gets.chomp
+	search_letter = STDIN.gets.chomp
 	@students.select! {|student| student[:name][0] == search_letter }
 end
 
@@ -70,14 +74,21 @@ def cohort_sort
 	puts "which cohort?"
 	cohort = ''
 	until @months.include?(cohort)
-		cohort = gets.chomp
+		cohort = STDIN.gets.chomp
 	end
 	@students.select! {|student| student[:cohort] == cohort.to_sym } 
 end
 
+def get_student_values
+	new_array = []
+	@students.each {|student| new_array << student}
+	return new_array
+end
+
 def print_students
-	if sort_by?("letter") then letter_sort end
-	if sort_by?("cohort") then cohort_sort end
+	initial_student_values = get_student_values
+	if sort_by?("letter") then @students = letter_sort end
+	if sort_by?("cohort") then @students = cohort_sort end
 	print_header
 	if @students.length > 0
 		i = 0
@@ -89,7 +100,7 @@ def print_students
 	else
 		puts "No students found"
 	end
-	reset_student_list
+	@students = initial_student_values
 end
 
 def print_menu
@@ -121,7 +132,7 @@ end
 def interactive_menu
 	loop do
 		print_menu	
-		process(gets.chomp)
+		process(STDIN.gets.chomp)
 	end
 end
 
@@ -135,14 +146,26 @@ def save_students
 	file.close
 end
 
-def load_students
-	file = File.open("students.csv", "r")
+def load_students(filename="students.csv")
+	file = File.open(filename, "r")
 	file.readlines.each do |line|
 		name, cohort = line.chomp.split(',')
-		@students << {name: name, cohort: cohort.to_sym}
-		@full_list_of_students << {name: name, cohort: cohort.to_sym}
+		update_students(name,cohort)
 	end
 	file.close
 end
 
+def try_load_students
+	filename = ARGV.first
+	return if filename.nil?
+	if File.exists?(filename)
+		load_students(filename)
+		puts "Loaded #{@students.count} from #{filename}"
+	else 
+		puts "Sorry, #{filename} doesn't exist."
+		exit
+	end
+end
+
+try_load_students
 interactive_menu
