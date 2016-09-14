@@ -167,5 +167,10 @@ def try_load_students
 	end
 end
 
+def set_first_argv
+	if ARGV.length == 0 then ARGV[0] = "students.csv" end
+end
+
+set_first_argv
 try_load_students
 interactive_menu
