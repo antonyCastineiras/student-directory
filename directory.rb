@@ -1,7 +1,6 @@
-
 @months = ["january","february","march","april","may","june","july","august","september","october","november","december"]
 @students = []
-
+@full_list_of_students = []
 def print_header
 	puts "The students of Villains Academy"
 	puts "--------------------------------"
@@ -32,16 +31,19 @@ def input_students
 	while !name.empty? do
 		cohort = input_chohort
 		@students << {name: name, cohort: cohort.to_sym}
+		@full_list_of_students << {name: name, cohort: cohort.to_sym}
 		puts "Now we have #{@students.count} students"
 		name = gets.chomp
 	end
 end
+
+def reset_student_list
+	@students = @full_list_of_students
+end
 	
 def get_student_name(student_name)
-		if student_name.length >= 12 
-			student_name = student_name[0..8]+('...') 
-		end 
-		return student_name
+	if student_name.length >= 12 then	student_name = student_name[0..8]+('...') end 
+	return student_name
 end
 
 def sort_by?(string)
@@ -70,14 +72,12 @@ def cohort_sort
 	until @months.include?(cohort)
 		cohort = gets.chomp
 	end
-	sorted_array = []
-	@students.each {|student| if student[:cohort] == cohort.to_sym then sorted_array << student end } 
-	return sorted_array
+	@students.select! {|student| student[:cohort] == cohort.to_sym } 
 end
 
 def print_students
-	if sort_by?("letter") then @students = letter_sort end
-	if sort_by?("cohort") then @students = cohort_sort end
+	if sort_by?("letter") then letter_sort end
+	if sort_by?("cohort") then cohort_sort end
 	print_header
 	if @students.length > 0
 		i = 0
@@ -89,26 +89,33 @@ def print_students
 	else
 		puts "No students found"
 	end
+	reset_student_list
+end
 
+def print_menu
+	puts "1. Update students"
+	puts "2. Show the students"
+	puts "9.exit"
+end
+
+def process(selection)
+	case selection
+		when "1"
+			input_students
+		when "2"
+			print_students
+			print_footer(@students)
+		when "9"
+			exit
+		else 
+			puts "I don't know what you meant,try again"
+	end
 end
 
 def interactive_menu
 	loop do
-		puts "1. Update students"
-		puts "2. Show the students"
-		puts "9.exit"
-		selection = gets.chomp
-		case selection
-			when "1"
-				input_students
-			when "2"
-				print_students
-				print_footer(@students)
-			when "9"
-				exit
-			else 
-				puts "I don't know what you meant,try again"
-		end
+		print_menu	
+		process(gets.chomp)
 	end
 end
 
