@@ -222,4 +222,5 @@ def execute
 	try_load_students
 	interactive_menu
 end
-execute
+#execute
+puts $0
