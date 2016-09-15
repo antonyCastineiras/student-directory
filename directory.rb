@@ -1,3 +1,4 @@
+require 'csv'
 @months = ["january","february","march","april","may","june","july","august","september","october","november","december"]
 @students = []
 @full_list_of_students = []
@@ -132,11 +133,9 @@ end
 #======================
 
 def load_students(filename="students.csv")
-	File.open(filename, "r") do |file|
-		file.readlines.each do |line|
-			name, cohort = line.chomp.split(',')
-			update_students(name,cohort)
-		end
+	CSV.foreach(ARGV[0]) do |line|
+		name, cohort = line
+		update_students(name,cohort)
 	end
 end
 
