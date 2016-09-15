@@ -132,7 +132,8 @@ end
 # save/load methods
 #======================
 
-def load_students(filename="students.csv")
+def load_students(file_name="students.csv")
+	@students = []
 	CSV.foreach(ARGV[0]) do |line|
 		name, cohort = line
 		update_students(name,cohort)
@@ -142,11 +143,10 @@ end
 def save_students
 	puts "Save to which file?"
 	file_name = STDIN.gets.chomp
-	File.open(file_name, "w") do |file|
+	CSV.open(file_name, "w") do |file|
 		@students.each do |student|
 			student_data = [student[:name], student[:cohort]]
-			csv_line = student_data.join(",")
-			file.puts csv_line
+			file << student_data
 		end
 	end
 end
@@ -156,17 +156,21 @@ def set_first_argv
 end
 
 def try_load_students
-	filename = ARGV.first
-	return if filename.nil?
-	if File.exists?(filename)
-		load_students(filename)
-		puts "Loaded #{@students.count} from #{filename}"
+	file_name = ARGV.first
+	return if file_name.nil?
+	if File.exists?(file_name)
+		load_students(file_name)
+		puts "Loaded #{@students.count} from #{file_name}"
 	else 
-		puts "Sorry, #{filename} doesn't exist."
+		puts "Sorry, #{file_name} doesn't exist."
 		exit
 	end
 end
 
+def update_students(name,cohort)
+	@students << {name: name, cohort: cohort.to_sym}
+	@full_list_of_students << {name: name, cohort: cohort.to_sym}
+end
 
 #======================
 # sorting methods
@@ -206,14 +210,10 @@ def student_sort
 	if sort_by?("letter") then @students = letter_sort end
 	if sort_by?("cohort") then @students = cohort_sort end
 end
-#======================
-# update methods
-#======================
 
-def update_students(name,cohort)
-	@students << {name: name, cohort: cohort.to_sym}
-	@full_list_of_students << {name: name, cohort: cohort.to_sym}
-end
+
+
+
 
 
 
