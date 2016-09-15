@@ -59,7 +59,7 @@ end
 def print_menu
 	puts "1. Update students"
 	puts "2. Show the students"
-	puts "3. Save student list to students.csv"
+	puts "3. Save student list"
 	puts "4. Load student list from students.csv"
 	puts "9.exit"
 end
@@ -68,18 +68,25 @@ def process(selection)
 	case selection
 		when "1"
 			input_students
+			success("input students")
 		when "2"
 			print_students
 			print_footer(@students)
 		when "3"
 			save_students
+			success("saved students")
 		when "4"
 			load_students
+			success("loaded students")
 		when "9"
 			exit
 		else 
 			puts "I don't know what you meant,try again"
 	end
+end
+
+def success(string)
+	puts "Successfully #{string}"
 end
 
 
@@ -134,7 +141,9 @@ def load_students(filename="students.csv")
 end
 
 def save_students
-	file = File.open("students.csv", "w")
+	puts "Save to which file?"
+	file_name = STDIN.gets.chomp
+	file = File.open(file_name, "w")
 	@students.each do |student|
 		student_data = [student[:name], student[:cohort]]
 		csv_line = student_data.join(",")
